@@ -1,7 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Property } from "./property.entity";
 
 @Entity()
-export class PropertyFeatureEntity {
+export class PropertyFeature {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -25,4 +26,8 @@ export class PropertyFeatureEntity {
 
     @Column()
     elevator: boolean;
+
+    @OneToOne(() => Property, (property) =>property.propertyFeature )
+    @JoinColumn()
+    property: Property;
 }

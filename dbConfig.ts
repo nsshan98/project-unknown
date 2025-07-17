@@ -1,4 +1,3 @@
-import { UserEntity } from "src/entities/user.entity";
 import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions";
 
 export const pgConfig:PostgresConnectionOptions = {

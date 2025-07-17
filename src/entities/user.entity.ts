@@ -1,16 +1,29 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Property } from "./property.entity";
 
 @Entity()
-export class UserEntity {
+export class User {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column()
-    name: string;
+    firstName: string;
+
+    @Column()
+    lastName: string;
 
     @Column()
     email: string;
 
-    @Column({default: 'user'})
+    @Column()
+    password: string;
+
+    @Column()
+    phoneNumber: string;
+
+    @Column({default: 'User'})
     role: string;
+
+    @OneToMany(() => Property, (property) => property.user)
+    properties: Property[];
 }

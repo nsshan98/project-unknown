@@ -1,5 +1,6 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Property } from "./property.entity";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Accommodation } from "./accommodation.entity";
+import { Review } from "./review.entity";
 
 @Entity()
 export class User {
@@ -21,9 +22,19 @@ export class User {
     @Column()
     phoneNumber: string;
 
+    @Column()
+    userAvatar: string;
+
     @Column({default: 'User'})
     role: string;
 
-    @OneToMany(() => Property, (property) => property.user)
-    properties: Property[];
+    @CreateDateColumn()
+    createdAt: Date;
+
+    @OneToMany(() => Accommodation, (accommodation) => accommodation.user)
+    accommodations: Accommodation[];
+
+    @ManyToMany(() => Review, (review) => review.reviewedBy)
+    @JoinColumn({ name: 'user_reviews' })
+    reviewedUsers: Review[];
 }

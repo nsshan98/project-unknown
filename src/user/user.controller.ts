@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query}
 import { CreateUserDto } from './dto/createUser.dto';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/updateUser.dto';
+import { PaginationDto } from './dto/pagination.dto';
 
 @Controller('user')
 export class UserController {
@@ -18,8 +19,9 @@ export class UserController {
     }
 
     @Get()
-    getAllUsers() {
-        return this.userService.getAllUsers();
+    getAllUsers(@Query() paginationDto: PaginationDto) {
+        console.log(paginationDto);
+        return this.userService.getAllUsers(paginationDto);
     }
 
     @Patch(':id')

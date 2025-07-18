@@ -4,6 +4,8 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { User } from 'src/entities/user.entity';
+import { PaginationDto } from './dto/pagination.dto';
+import { DEFAULT_PAGINATION_LIMIT } from 'src/utils/constants';
 
 @Injectable()
 export class UserService {
@@ -25,8 +27,12 @@ export class UserService {
         return userInfo;
     }
 
-    async getAllUsers() {
-        return await this.userReporsitory.find();
+    async getAllUsers(paginationDto: PaginationDto) {
+        console.log(paginationDto);
+        return await this.userReporsitory.find({
+            skip: paginationDto.skip,
+            take: paginationDto.limit ?? DEFAULT_PAGINATION_LIMIT
+        });
     }
 
     async updateUser(id:number, dto:UpdateUserDto){

@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Accommodation } from "./accommodation.entity";
 import { Review } from "./review.entity";
 
@@ -35,6 +35,6 @@ export class User {
     accommodations: Accommodation[];
 
     @ManyToMany(() => Review, (review) => review.reviewedBy)
-    @JoinColumn({ name: 'user_reviews' })
+    @JoinTable({ name: 'user_reviews' })
     reviewedUsers: Review[];
 }

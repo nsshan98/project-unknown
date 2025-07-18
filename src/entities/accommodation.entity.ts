@@ -1,12 +1,14 @@
 import {
   Column,
   Entity,
+  ManyToMany,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from './user.entity';
 import { Amenity } from './amenity.entity';
+import { Review } from './review.entity';
 
 @Entity()
 export class Accommodation {
@@ -60,4 +62,6 @@ export class Accommodation {
   @ManyToOne(() => User, (user) => user.accommodations)
   user: User;
   
+  @ManyToMany(() => Review, (review) => review.accommodations)
+  reviews: Review[];
 }

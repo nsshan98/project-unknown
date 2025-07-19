@@ -3,10 +3,17 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { pgConfig } from 'dbConfig';
+import { ConfigModule } from '@nestjs/config';
+import dbConfig from './config/db.config';
 
 @Module({
-  imports: [UserModule, TypeOrmModule.forRoot(pgConfig)],
+  imports: [ConfigModule.forRoot({
+    isGlobal: true,
+    expandVariables: true,
+    load: [dbConfig]
+  }),UserModule, TypeOrmModule.forRootAsync({
+    useFactory: dbConfig,
+  })],
   controllers: [AppController],
   providers: [AppService],
 })

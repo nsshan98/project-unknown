@@ -12,7 +12,8 @@ export class UserService {
     constructor(@InjectRepository(User) private userReporsitory: Repository<User>){}
 
     async createUser(dto: CreateUserDto){
-      return await this.userReporsitory.save(dto);
+    const user = await this.userReporsitory.create(dto);
+      return await this.userReporsitory.save(user);
     }
 
     async getSingleUser(id: number){

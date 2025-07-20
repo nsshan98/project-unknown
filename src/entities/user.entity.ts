@@ -1,6 +1,7 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Accommodation } from "./accommodation.entity";
 import { Review } from "./review.entity";
+import * as bcrypt from 'bcrypt';
 
 @Entity()
 export class User {
@@ -19,10 +20,10 @@ export class User {
     @Column()
     password: string;
 
-    @Column()
+    @Column({nullable: true})
     phoneNumber: string;
 
-    @Column()
+    @Column({nullable: true})
     userAvatar: string;
 
     @Column({default: 'User'})
@@ -37,4 +38,9 @@ export class User {
     @ManyToMany(() => Review, (review) => review.reviewedBy)
     @JoinTable({ name: 'user_reviews' })
     reviewedUsers: Review[];
+
+    @BeforeInsert()
+    async hashPassword() {
+      this.password = await bcrypt.hash(this.password, 10);
+    }
 }

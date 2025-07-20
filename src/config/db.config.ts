@@ -5,8 +5,7 @@ export default (): PostgresConnectionOptions => ({
   url: process.env.DATABASE_URL,
   type: 'postgres',
   port: process.env.DATABASE_PORT ? parseInt(process.env.DATABASE_PORT, 10) : 3306,
-  // entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-  entities: [path.resolve(__dirname, '..') + '/../**/*.entity{.ts,.js}'],
+  entities: [__dirname + '/../**/*.entity{.ts,.js}'],
   synchronize: true,
 });
 

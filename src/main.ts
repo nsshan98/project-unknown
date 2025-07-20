@@ -10,7 +10,6 @@ async function bootstrap() {
     forbidNonWhitelisted: true,
   }))
   await app.listen(process.env.PORT ?? 5000);
-  console.log(process.env.DATABASE_URL, 'main.ts');
   
 }
 bootstrap();

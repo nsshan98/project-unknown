@@ -1,11 +1,12 @@
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
+import * as path from 'path'
 
 export default (): PostgresConnectionOptions => ({
   url: process.env.DATABASE_URL,
   type: 'postgres',
-//   port: 3000,
-  entities: [__dirname + '/**/*.entity{.ts,.js}'],
+  port: process.env.DATABASE_PORT ? parseInt(process.env.DATABASE_PORT, 10) : 3306,
+  // entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+  entities: [path.resolve(__dirname, '..') + '/../**/*.entity{.ts,.js}'],
   synchronize: true,
 });
 
-console.log(process.env.url, 'db.config.ts');

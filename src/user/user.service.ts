@@ -44,4 +44,12 @@ export class UserService {
     async deleteUser(id: number){
         return await this.userReporsitory.delete({id});
     }
+
+    async findUserByEmail(email: string){
+        return await this.userReporsitory.findOne({
+            where: {
+                email
+            }
+        })
+    }
 }

@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, Req, UseGuards} from '@nestjs/common';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { PaginationDto } from './dto/pagination.dto';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-auth/jwt-auth.guard';
 
 @Controller('user')
 export class UserController {
@@ -14,9 +15,10 @@ export class UserController {
         return this.userService.createUser(dto);
     }
 
-    @Get(':id')
-    getUserById(@Param('id', ParseIntPipe) id, @Query('name') name){
-        return this.userService.getSingleUser(id);
+    @UseGuards(JwtAuthGuard)
+    @Get('profile')
+    getUserById(@Req() req){
+        return this.userService.getSingleUser(req.user.userId);
     }
 
     @Get()

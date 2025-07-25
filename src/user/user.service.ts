@@ -21,6 +21,7 @@ export class UserService {
             where: {
                 id
             }
+            
         })
         if(!userInfo){
             throw new NotFoundException()

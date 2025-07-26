@@ -34,4 +34,13 @@ export class AuthService {
             refreshToken
         }
     }
+
+    refreshToken(userId:number){
+         const payload:AuthJwtPayload = { sub: userId };
+        const accessToken = this.jwtService.sign(payload)
+        return {
+            userId,
+            accessToken
+        }
+    }
 }

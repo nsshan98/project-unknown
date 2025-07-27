@@ -1,10 +1,12 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   ManyToMany,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { User } from './user.entity';
 import { Amenity } from './amenity.entity';
@@ -31,16 +33,16 @@ export class Accommodation {
   bathrooms: number;
 
   @Column()
-  pricePerNight: number;
+  price_per_night: number;
 
   @Column()
-  maxGuests: number;
+  max_guests: number;
 
   @Column()
-  checkInTime: Date;
+  check_in_time: Date;
 
   @Column()
-  checkOutTime: Date;
+  check_out_time: Date;
 
   @Column()
   location: string;
@@ -48,11 +50,11 @@ export class Accommodation {
   @Column()
   status: string;
 
-  @Column()
-  createdAt: Date;
+  @CreateDateColumn()
+  created_at: Date;
 
-  @Column()
-  updatedAt: Date;
+  @UpdateDateColumn()
+  updated_at: Date;
 
   @OneToOne(() => Amenity, (amenity) => amenity.accommodation, {
     cascade: true,
@@ -61,7 +63,7 @@ export class Accommodation {
 
   @ManyToOne(() => User, (user) => user.accommodations)
   user: User;
-  
+
   @ManyToMany(() => Review, (review) => review.accommodations)
   reviews: Review[];
 }

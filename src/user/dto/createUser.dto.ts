@@ -10,11 +10,11 @@ import {
 export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
-  firstName: string;
+  first_name: string;
 
   @IsString()
   @IsNotEmpty()
-  lastName: string;
+  last_name: string;
 
   @IsString()
   @IsEmail()
@@ -28,10 +28,10 @@ export class CreateUserDto {
   @IsString()
   @IsPhoneNumber()
   @IsOptional()
-  phoneNumber?: string;
+  phone_number?: string;
 
   @IsString()
   @IsUrl()
   @IsOptional()
-  userAvatar?: string;
+  user_avatar?: string;
 }

@@ -1,24 +1,38 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Accommodation } from "./accommodation.entity";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { Accommodation } from './accommodation.entity';
 
 @Entity()
 export class Amenity {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    hasWifi: boolean;
+  @Column()
+  has_wifi: boolean;
 
-    @Column()
-    hasBalcony: boolean;
+  @Column()
+  has_balcony: boolean;
 
-    @Column()
-    parkingSpaces: boolean;
+  @Column()
+  has_parking_space: boolean;
 
-    @Column()
-    elevator: boolean;
+  @Column()
+  has_elevator: boolean;
 
-    @OneToOne(() => Accommodation, (accommodation) =>accommodation.amenity )
-    @JoinColumn()
-    accommodation: Accommodation;
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
+
+  @OneToOne(() => Accommodation, (accommodation) => accommodation.amenity)
+  @JoinColumn()
+  accommodation: Accommodation;
 }

@@ -1,4 +1,4 @@
-import { BeforeInsert, Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Accommodation } from "./accommodation.entity";
 import { Review } from "./review.entity";
 import * as bcrypt from 'bcrypt';
@@ -9,10 +9,10 @@ export class User {
     id: number;
 
     @Column()
-    firstName: string;
+    first_name: string;
 
     @Column()
-    lastName: string;
+    last_name: string;
 
     @Column()
     email: string;
@@ -20,24 +20,30 @@ export class User {
     @Column()
     password: string;
 
-    @Column({nullable: true})
-    phoneNumber: string;
+    @Column({ nullable: true })
+    hashed_refresh_token: string;
 
     @Column({nullable: true})
-    userAvatar: string;
+    phone_number: string;
+
+    @Column({nullable: true})
+    user_avatar: string;
 
     @Column({default: 'User'})
     role: string;
 
     @CreateDateColumn()
-    createdAt: Date;
+    created_at: Date;
+
+    @UpdateDateColumn()
+    updated_at: Date;
 
     @OneToMany(() => Accommodation, (accommodation) => accommodation.user)
     accommodations: Accommodation[];
 
-    @ManyToMany(() => Review, (review) => review.reviewedBy)
-    @JoinTable({ name: 'user_reviews' })
-    reviewedUsers: Review[];
+    @ManyToMany(() => Review, (review) => review.reviewed_by)
+    @JoinTable({ name: 'users_reviews' })
+    reviewed_users: Review[];
 
     @BeforeInsert()
     async hashPassword() {

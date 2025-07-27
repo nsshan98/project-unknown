@@ -2,6 +2,7 @@ import { Controller, HttpCode, HttpStatus, Post, Request, UseGuards } from '@nes
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guard/local-auth/local-auth.guard';
 import { RefreshJwtAuthGuard } from './guard/refresh-jwt-auth/refresh-jwt-auth.guard';
+import { JwtAuthGuard } from './guard/jwt-auth/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -20,5 +21,12 @@ export class AuthController {
   refreshToken(@Request() req){
     const userId = req.user.id;
     return this.authService.refreshToken(userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post("logout")
+  logout(@Request() req) {
+    const userId = req.user.id;
+    return this.authService.logout(userId);
   }
 }

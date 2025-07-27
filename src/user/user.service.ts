@@ -53,4 +53,9 @@ export class UserService {
             }
         })
     }
+
+    async updateHashedRefreshToken(userId: number, hashedRefreshToken: string){
+        return await this.userReporsitory.update({id: userId}, {hashed_refresh_token: hashedRefreshToken});
+    }
+    
 }

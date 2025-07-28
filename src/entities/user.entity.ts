@@ -20,8 +20,8 @@ export class User {
     @Column()
     password: string;
 
-    @Column({ nullable: true })
-    hashed_refresh_token: string;
+    @Column({ type: 'text', nullable: true })
+    hashed_refresh_token: string | null;
 
     @Column({nullable: true})
     phone_number: string;

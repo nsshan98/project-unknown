@@ -20,7 +20,8 @@ export class UserService {
         const userInfo =  await this.userReporsitory.findOne({
             where: {
                 id
-            }
+            },
+            select: ['id', 'hashed_refresh_token']
             
         })
         if(!userInfo){
@@ -54,8 +55,13 @@ export class UserService {
         })
     }
 
-    async updateHashedRefreshToken(userId: number, hashedRefreshToken: string){
-        return await this.userReporsitory.update({id: userId}, {hashed_refresh_token: hashedRefreshToken});
+    async updateHashedRefreshToken(userId: number, hashedRefreshToken: string | null) {
+        console.log(`Updating hashed refresh token for user ${userId} to ${hashedRefreshToken}`);
+        
+        return await this.userReporsitory.update(
+            { id: userId },
+            { hashed_refresh_token: hashedRefreshToken }
+        );
     }
     
 }

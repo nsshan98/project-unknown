@@ -78,8 +78,9 @@ export class AuthService {
     return {userId: user.id}
   }
 
-  async logout(userId) {
-    await this.userService.updateHashedRefreshToken(userId, '');
+  async logout(userId: number) {    
+    await this.userService.updateHashedRefreshToken(userId, null);
+  
     return { message: 'Logged out successfully' };
   }
 }

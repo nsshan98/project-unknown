@@ -2,6 +2,7 @@ import { BeforeInsert, Column, CreateDateColumn, Entity, JoinColumn, JoinTable, 
 import { Accommodation } from "./accommodation.entity";
 import { Review } from "./review.entity";
 import * as bcrypt from 'bcrypt';
+import { Role } from "src/auth/enum/role.enum";
 
 @Entity()
 export class User {
@@ -29,7 +30,11 @@ export class User {
     @Column({nullable: true})
     user_avatar: string;
 
-    @Column({default: 'User'})
+    @Column({
+      type: 'enum',
+      enum: Role,
+      default: Role.USER,
+    })
     role: string;
 
     @CreateDateColumn()

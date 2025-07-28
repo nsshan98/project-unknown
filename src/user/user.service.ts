@@ -9,59 +9,67 @@ import { DEFAULT_PAGINATION_LIMIT } from 'src/utils/constants';
 
 @Injectable()
 export class UserService {
-    constructor(@InjectRepository(User) private userReporsitory: Repository<User>){}
+  constructor(
+    @InjectRepository(User) private userReporsitory: Repository<User>,
+  ) {}
 
-    async createUser(dto: CreateUserDto){
+  async createUser(dto: CreateUserDto) {
+    const existingUser = await this.userReporsitory.findOne({
+      where: { email: dto.email },
+    });
+
+    if (existingUser) {
+      throw new NotFoundException('User with this email already exists');
+    }
     const user = await this.userReporsitory.create(dto);
-      return await this.userReporsitory.save(user);
-    }
 
-    async getSingleUser(id: number){
-        const userInfo =  await this.userReporsitory.findOne({
-            where: {
-                id
-            },
-            select: ['id', 'hashed_refresh_token']
-            
-        })
-        if(!userInfo){
-            throw new NotFoundException()
-        }
-        return userInfo;
-    }
+    return await this.userReporsitory.save(user);
+  }
 
-    async getAllUsers(paginationDto: PaginationDto) {
-        console.log(paginationDto);
-        return await this.userReporsitory.find({
-            skip: paginationDto.skip,
-            take: paginationDto.limit ?? DEFAULT_PAGINATION_LIMIT
-        });
+  async getSingleUser(id: number) {
+    const userInfo = await this.userReporsitory.findOne({
+      where: {
+        id,
+      },
+      select: ['id', 'hashed_refresh_token'],
+    });
+    if (!userInfo) {
+      throw new NotFoundException();
     }
+    return userInfo;
+  }
 
-    async updateUser(id:number, dto:UpdateUserDto){
-        return await this.userReporsitory.update({id}, dto)
-        
-    }
+  async getAllUsers(paginationDto: PaginationDto) {
+    console.log(paginationDto);
+    return await this.userReporsitory.find({
+      skip: paginationDto.skip,
+      take: paginationDto.limit ?? DEFAULT_PAGINATION_LIMIT,
+    });
+  }
 
-    async deleteUser(id: number){
-        return await this.userReporsitory.delete({id});
-    }
+  async updateUser(id: number, dto: UpdateUserDto) {
+    return await this.userReporsitory.update({ id }, dto);
+  }
 
-    async findUserByEmail(email: string){
-        return await this.userReporsitory.findOne({
-            where: {
-                email
-            }
-        })
-    }
+  async deleteUser(id: number) {
+    return await this.userReporsitory.delete({ id });
+  }
 
-    async updateHashedRefreshToken(userId: number, hashedRefreshToken: string | null) {
-        console.log(`Updating hashed refresh token for user ${userId} to ${hashedRefreshToken}`);
-        
-        return await this.userReporsitory.update(
-            { id: userId },
-            { hashed_refresh_token: hashedRefreshToken }
-        );
-    }
-    
+  async findUserByEmail(email: string) {
+    return await this.userReporsitory.findOne({
+      where: {
+        email,
+      },
+    });
+  }
+
+  async updateHashedRefreshToken(
+    userId: number,
+    hashedRefreshToken: string | null,
+  ) {
+    return await this.userReporsitory.update(
+      { id: userId },
+      { hashed_refresh_token: hashedRefreshToken },
+    );
+  }
 }

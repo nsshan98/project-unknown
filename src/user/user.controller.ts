@@ -4,6 +4,8 @@ import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { PaginationDto } from './dto/pagination.dto';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth/jwt-auth.guard';
+import { Role } from 'src/auth/enum/role.enum';
+import { Roles } from 'src/auth/decorators/roles.decorators';
 
 @Controller('user')
 export class UserController {
@@ -32,6 +34,7 @@ export class UserController {
         return this.userService.updateUser(id, dto);
     }
 
+    @Roles(Role.ADMIN, Role.EDITOR)
     @Delete(':id')
     deleteUser(@Param('id', ParseIntPipe) id) {
         return this.userService.deleteUser(id);

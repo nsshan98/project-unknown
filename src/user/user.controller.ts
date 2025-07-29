@@ -6,6 +6,7 @@ import { PaginationDto } from './dto/pagination.dto';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth/jwt-auth.guard';
 import { Role } from 'src/auth/enum/role.enum';
 import { Roles } from 'src/auth/decorators/roles.decorators';
+import { RolesGuard } from 'src/auth/guard/roles/roles.guard';
 
 @Controller('user')
 export class UserController {
@@ -34,7 +35,9 @@ export class UserController {
         return this.userService.updateUser(id, dto);
     }
 
-    @Roles(Role.ADMIN, Role.EDITOR)
+    @Roles(Role.USER)
+    @UseGuards(RolesGuard)
+    @UseGuards(JwtAuthGuard)
     @Delete(':id')
     deleteUser(@Param('id', ParseIntPipe) id) {
         return this.userService.deleteUser(id);

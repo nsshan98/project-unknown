@@ -31,7 +31,7 @@ export class UserService {
       where: {
         id,
       },
-      select: ['id', 'hashed_refresh_token'],
+      select: ['id', 'role', 'hashed_refresh_token'],
     });
     if (!userInfo) {
       throw new NotFoundException();

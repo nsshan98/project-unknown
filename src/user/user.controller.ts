@@ -36,8 +36,8 @@ export class UserController {
     }
 
     @Roles(Role.USER)
-    @UseGuards(RolesGuard)
-    @UseGuards(JwtAuthGuard)
+    // @UseGuards(RolesGuard)
+    // @UseGuards(JwtAuthGuard)
     @Delete(':id')
     deleteUser(@Param('id', ParseIntPipe) id) {
         return this.userService.deleteUser(id);

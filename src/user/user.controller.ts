@@ -6,13 +6,13 @@ import { PaginationDto } from './dto/pagination.dto';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth/jwt-auth.guard';
 import { Role } from 'src/auth/enum/role.enum';
 import { Roles } from 'src/auth/decorators/roles.decorators';
-import { RolesGuard } from 'src/auth/guard/roles/roles.guard';
 import { Public } from 'src/auth/decorators/public.decorators';
 
 @Controller('user')
 export class UserController {
     constructor(private userService: UserService) {}
 
+    @Public()
     @Post()
     createUser(@Body() dto: CreateUserDto) {
         return this.userService.createUser(dto);
@@ -37,16 +37,12 @@ export class UserController {
 
     @Roles(Role.USER)
     @Delete(':id')
-    deleteUser(@Param('id', ParseIntPipe) id) {
-        const deleteUser = this.userService.deleteUser(id);
-        console.log(deleteUser);
+   async deleteUser(@Param('id', ParseIntPipe) id) {
+    
+        const deleteUser = await this.userService.deleteUser(id);
         
-        if(!deleteUser){
-            return NotFoundException
-        }
         return {
             message: 'User Deleted',
-            deleteUser
         }
     }
 

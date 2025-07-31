@@ -22,7 +22,6 @@ export class UserService {
       throw new NotFoundException('User with this email already exists');
     }
     const user = await this.userReporsitory.create(dto);
-
     return await this.userReporsitory.save(user);
   }
 

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, Req, UseGuards} from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, ParseIntPipe, Patch, Post, Query, Req, UseGuards} from '@nestjs/common';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/updateUser.dto';
@@ -15,7 +15,6 @@ export class UserController {
 
     @Post()
     createUser(@Body() dto: CreateUserDto) {
-        
         return this.userService.createUser(dto);
     }
 
@@ -37,11 +36,18 @@ export class UserController {
     }
 
     @Roles(Role.USER)
-    // @UseGuards(RolesGuard)
-    // @UseGuards(JwtAuthGuard)
     @Delete(':id')
     deleteUser(@Param('id', ParseIntPipe) id) {
-        return this.userService.deleteUser(id);
+        const deleteUser = this.userService.deleteUser(id);
+        console.log(deleteUser);
+        
+        if(!deleteUser){
+            return NotFoundException
+        }
+        return {
+            message: 'User Deleted',
+            deleteUser
+        }
     }
 
 }

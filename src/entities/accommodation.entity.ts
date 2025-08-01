@@ -4,6 +4,7 @@ import {
   Entity,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -11,6 +12,7 @@ import {
 import { User } from './user.entity';
 import { Amenity } from './amenity.entity';
 import { Review } from './review.entity';
+import { AccommodationImages } from './accommodationImage.entity';
 
 @Entity()
 export class Accommodation {
@@ -66,4 +68,7 @@ export class Accommodation {
 
   @ManyToMany(() => Review, (review) => review.accommodations)
   reviews: Review[];
+
+  @OneToMany(() => AccommodationImages, (accommodationImage) => accommodationImage.accommodation)
+  accommodation_image: AccommodationImages[]
 }

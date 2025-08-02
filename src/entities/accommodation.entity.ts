@@ -22,7 +22,7 @@ export class Accommodation {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   description: string;
 
   @Column()
@@ -35,7 +35,7 @@ export class Accommodation {
   bedrooms: number;
 
   @Column()
-  bathrooms: number;
+  has_high_commode: boolean;
 
   @Column()
   price_per_night: number;
@@ -43,17 +43,14 @@ export class Accommodation {
   @Column()
   max_guests: number;
 
-  @Column()
-  check_in_time: Date;
+  @Column({ nullable: true })
+  check_in_time?: Date;
 
-  @Column()
-  check_out_time: Date;
+  @Column({ nullable: true })
+  check_out_time?: Date;
 
   @Column()
   location: string;
-
-  @Column()
-  status: string;
 
   @CreateDateColumn()
   created_at: Date;

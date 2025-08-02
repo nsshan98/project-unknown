@@ -14,9 +14,10 @@ import { RefreshJwtStrategy } from './strategies/refresh-jwt.strategy';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './guard/jwt-auth/jwt-auth.guard';
 import { RolesGuard } from './guard/roles/roles.guard';
+import { Accommodation } from 'src/entities/accommodation.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]),
+  imports: [TypeOrmModule.forFeature([User, Accommodation]),
   JwtModule.registerAsync(jwtConfig.asProvider()), ConfigModule.forFeature(jwtConfig), ConfigModule.forFeature(refreshJwtConfig)],
   controllers: [AuthController],
   providers: [AuthService, UserService, LocalStrategy, JwtStrategy, RefreshJwtStrategy, {

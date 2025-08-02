@@ -9,7 +9,7 @@ import {
 import { User } from './user.entity';
 import { Accommodation } from './accommodation.entity';
 
-@Entity()
+@Entity('reviews')
 export class Review {
   @PrimaryGeneratedColumn()
   id: number;

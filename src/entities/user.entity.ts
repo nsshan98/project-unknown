@@ -4,7 +4,7 @@ import { Review } from "./review.entity";
 import * as bcrypt from 'bcrypt';
 import { Role } from "src/auth/enum/role.enum";
 
-@Entity()
+@Entity('users')
 export class User {
     @PrimaryGeneratedColumn()
     id: number;
@@ -47,7 +47,7 @@ export class User {
     accommodations: Accommodation[];
 
     @ManyToMany(() => Review, (review) => review.reviewed_by)
-    @JoinTable({ name: 'users_reviews' })
+    @JoinTable({ name: 'user_reviews' })
     reviewed_users: Review[];
 
     @BeforeInsert()

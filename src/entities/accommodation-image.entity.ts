@@ -2,29 +2,25 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Accommodation } from './accommodation.entity';
 
-@Entity('amenities')
-export class Amenity {
+@Entity('accommodation_images')
+export class AccommodationImage {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  has_wifi: boolean;
+  image_url: string;
 
   @Column()
-  has_balcony: boolean;
+  caption: string;
 
   @Column()
-  has_parking_space: boolean;
-
-  @Column()
-  has_elevator: boolean;
+  sort_order: number;
 
   @CreateDateColumn()
   created_at: Date;
@@ -32,7 +28,9 @@ export class Amenity {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @OneToOne(() => Accommodation, (accommodation) => accommodation.amenity)
-  @JoinColumn()
+  @ManyToOne(
+    () => Accommodation,
+    (accommodation) => accommodation.accommodation_image,
+  )
   accommodation: Accommodation;
 }

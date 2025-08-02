@@ -12,9 +12,9 @@ import {
 import { User } from './user.entity';
 import { Amenity } from './amenity.entity';
 import { Review } from './review.entity';
-import { AccommodationImages } from './accommodationImage.entity';
+import { AccommodationImage } from './accommodation-image.entity';
 
-@Entity()
+@Entity('accommodations')
 export class Accommodation {
   @PrimaryGeneratedColumn()
   id: number;
@@ -27,6 +27,9 @@ export class Accommodation {
 
   @Column()
   type: string;
+
+  @Column()
+  image: string;
 
   @Column()
   bedrooms: number;
@@ -69,6 +72,9 @@ export class Accommodation {
   @ManyToMany(() => Review, (review) => review.accommodations)
   reviews: Review[];
 
-  @OneToMany(() => AccommodationImages, (accommodationImage) => accommodationImage.accommodation)
-  accommodation_image: AccommodationImages[]
+  @OneToMany(
+    () => AccommodationImage,
+    (accommodationImage) => accommodationImage.accommodation,
+  )
+  accommodation_image: AccommodationImage[];
 }

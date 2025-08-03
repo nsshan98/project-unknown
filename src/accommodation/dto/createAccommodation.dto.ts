@@ -16,7 +16,7 @@ export class CreateAccommodationDto {
 
     @IsString()
     @IsNotEmpty()
-    images: string;
+    image: string;
 
     @IsNumber()
     @IsNotEmpty()

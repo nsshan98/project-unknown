@@ -16,8 +16,8 @@ import { AccommodationImage } from './accommodation-image.entity';
 
 @Entity('accommodations')
 export class Accommodation {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   name: string;

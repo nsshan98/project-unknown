@@ -6,18 +6,22 @@ import { Role } from 'src/auth/enum/role.enum';
 import { AuthenticatedUser } from 'src/auth/decorators/authenticated-user.decorators';
 import { User } from 'src/entities/user.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { UploadService } from 'src/cloudinary/upload.service';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Controller('accommodation')
 export class AccommodationController {
-    constructor (private accommodationService: AccommodationService, private uploadService: UploadService){}
+    constructor (private accommodationService: AccommodationService, private cloudinaryService: CloudinaryService){}
 
     @Roles(Role.USER)
     @Post('create')
     @UseInterceptors(FileInterceptor('image'))
 
     async createAccommodation(@Body() dto: CreateAccommodationDto, @UploadedFile() image: Express.Multer.File, @AuthenticatedUser() user: User){ {
-        const uploadImage = await this.uploadService.uploadImage(image)
+
+        if(!image) throw new Error('Image is required')
+            
+        const uploadImage = await this.cloudinaryService.uploadImage(image)
+        dto.image = uploadImage.secure_url
         console.log(uploadImage);
         
         return this.accommodationService.createAccommodation(dto, user)

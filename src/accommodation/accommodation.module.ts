@@ -3,11 +3,12 @@ import { AccommodationService } from './accommodation.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Accommodation } from 'src/entities/accommodation.entity';
 import { AccommodationController } from './accommodation.controller';
-import { UploadService } from 'src/cloudinary/upload.service';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Accommodation])],
+  imports: [TypeOrmModule.forFeature([Accommodation]), CloudinaryModule],
   controllers: [AccommodationController],
-  providers: [AccommodationService, UploadService]
+  providers: [AccommodationService, CloudinaryService]
 })
 export class AccommodationModule {}

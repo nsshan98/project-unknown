@@ -57,21 +57,23 @@ export class AccommodationController {
   async updateAccommodation(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() dto: UpdateAccommodationDto,
-    @UploadedFile(new ImageUploadValidationPipe({required:false})) image: Express.Multer.File | undefined,
+    @UploadedFile(new ImageUploadValidationPipe({required:false})) updatedImage: Express.Multer.File | undefined,
     @AuthenticatedUser() user: User,
   ) {
     const getAccommodation = await this.accommodationService.findOneWithId(id);
     console.log(getAccommodation);
 
-    // if(getAccommodation?.image.image_public_id){
-    //   return this.cloudinaryService.deleteImage(getAccommodation.image.image_public_id)
-    // }
+    if(getAccommodation?.image.image_public_id){
+      console.log(getAccommodation.image.image_public_id);
+      
+      return this.cloudinaryService.deleteImage(getAccommodation.image.image_public_id)
+    }
 
-    // const uploadImage = await this.cloudinaryService.uploadImage(image as Express.Multer.File);
-    //   dto.image = {
-    //     image_url: uploadImage.secure_url,
-    //     image_public_id: uploadImage.public_id,
-    //   }
+    const uploadImage = await this.cloudinaryService.uploadImage(updatedImage as Express.Multer.File);
+      dto.image = {
+        image_url: uploadImage.secure_url,
+        image_public_id: uploadImage.public_id,
+      }
     
     
     if(getAccommodation?.user.id !== user.id) throw new UnauthorizedException('You are not allowed to update this accommodation');

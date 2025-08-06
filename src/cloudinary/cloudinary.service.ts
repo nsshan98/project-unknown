@@ -19,6 +19,8 @@ export class CloudinaryService {
   }
 
   async deleteImage(publicId:string){
+    console.log('Deleting Cloudinary image with public_id:', publicId);
+
     return await this.cloudinary.uploader.destroy(publicId);
   }
 }

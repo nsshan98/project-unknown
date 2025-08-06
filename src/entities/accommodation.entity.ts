@@ -28,8 +28,11 @@ export class Accommodation {
   @Column()
   type: string;
 
-  @Column()
-  image: string;
+  @Column('json')
+  image: {
+    image_url: string;
+    image_public_id: string;
+  };
 
   @Column()
   bedrooms: number;

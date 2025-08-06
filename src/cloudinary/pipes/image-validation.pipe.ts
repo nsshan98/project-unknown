@@ -4,15 +4,23 @@ import {
   PipeTransform,
 } from '@nestjs/common';
 
-export class ImageUploadValidationPipe implements PipeTransform {
-  transform(file: Express.Multer.File) {
-    console.log(file);
-    
-    if (!file) {
-      throw new BadRequestException('File is required');
-    }
+interface ImageUploadValidation {
+  required?: boolean;
+}
 
-    // if(file.length)
+export class ImageUploadValidationPipe implements PipeTransform {
+  constructor(private options: ImageUploadValidation = { required: true }) {}
+  transform(file: Express.Multer.File | undefined) {
+    const { required } = this.options;
+    console.log(file, 'file');
+
+    if (!file) {
+      if (required) {
+        throw new BadRequestException('File is required');
+      } else {
+        return undefined;
+      }
+    }
 
     const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
     if (!allowedTypes.includes(file.mimetype)) {

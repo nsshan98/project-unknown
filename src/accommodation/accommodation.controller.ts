@@ -34,14 +34,17 @@ export class AccommodationController {
   @UseInterceptors(FileInterceptor('image'))
   async createAccommodation(
     @Body() dto: CreateAccommodationDto,
-    @UploadedFile(new ImageUploadValidationPipe()) image: Express.Multer.File,
+    @UploadedFile(new ImageUploadValidationPipe({required: true})) image: Express.Multer.File,
     @AuthenticatedUser() user: User,
   ) {
     {
       if (!image) throw new BadRequestException('Image is required');
 
       const uploadImage = await this.cloudinaryService.uploadImage(image);
-      dto.image = uploadImage.secure_url;
+      dto.image = {
+        image_url: uploadImage.secure_url,
+        image_public_id: uploadImage.public_id,
+      }
       console.log(uploadImage);
 
       return this.accommodationService.createAccommodation(dto, user);
@@ -54,12 +57,24 @@ export class AccommodationController {
   async updateAccommodation(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() dto: UpdateAccommodationDto,
+    @UploadedFile(new ImageUploadValidationPipe({required:false})) image: Express.Multer.File | undefined,
     @AuthenticatedUser() user: User,
   ) {
-    console.log(user);
-    const accommodationOwner = await this.accommodationService.findOneWithId(id);
+    const getAccommodation = await this.accommodationService.findOneWithId(id);
+    console.log(getAccommodation);
+
+    // if(getAccommodation?.image.image_public_id){
+    //   return this.cloudinaryService.deleteImage(getAccommodation.image.image_public_id)
+    // }
+
+    // const uploadImage = await this.cloudinaryService.uploadImage(image as Express.Multer.File);
+    //   dto.image = {
+    //     image_url: uploadImage.secure_url,
+    //     image_public_id: uploadImage.public_id,
+    //   }
     
-    if(accommodationOwner?.user.id !== user.id) throw new UnauthorizedException('You are not allowed to update this accommodation');
+    
+    if(getAccommodation?.user.id !== user.id) throw new UnauthorizedException('You are not allowed to update this accommodation');
     
     return await this.accommodationService.updateAccommodation(id, dto);
   }

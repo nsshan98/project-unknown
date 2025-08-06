@@ -1,6 +1,17 @@
-import { IsBoolean, IsDate, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
+import { IsArray, IsBoolean, IsDate, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, ValidateNested } from "class-validator";
 import { RoomTypes } from "../enum/roomTypes.enum";
 import { Type } from "class-transformer";
+
+
+class ImageDto  {
+    @IsString()
+    @IsNotEmpty()
+    image_url: string;
+
+    @IsString()
+    @IsNotEmpty()
+    image_public_id: string;
+}
 
 export class CreateAccommodationDto {
     @IsString()
@@ -15,8 +26,10 @@ export class CreateAccommodationDto {
     @IsNotEmpty()
     type: RoomTypes;
 
+    @ValidateNested()
+    @Type(() => ImageDto)
     @IsOptional()
-    image?: string;
+    image?: ImageDto;
 
     @IsNumber()
     @IsNotEmpty()

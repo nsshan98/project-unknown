@@ -29,9 +29,12 @@ export class AccommodationService {
 
   async updateAccommodation(id: string, dto: UpdateAccommodationDto) {
     await this.accommodationRepository.update({ id }, dto);
-
     return this.accommodationRepository.findOne({
       where: { id },
     });
+  }
+
+  async deleteAccommodation(id: string){
+    return await this.accommodationRepository.delete({id})
   }
 }

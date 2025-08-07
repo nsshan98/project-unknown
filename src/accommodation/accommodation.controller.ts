@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   ForbiddenException,
   Param,
   ParseUUIDPipe,
@@ -94,5 +95,18 @@ export class AccommodationController {
       message: 'Accommodation Updated Successfully',
       data: updatedData,
     };
+  }
+
+  @Roles(Role.USER)
+  @Delete('delete/:id')
+  async deleteAccommodation(@Param('id', new ParseUUIDPipe()) id: string, @AuthenticatedUser() user: User) {
+    const getAccommodation = await this.accommodationService.findOneWithId(id); 
+    if(user.id !== getAccommodation?.user.id){
+      throw new ForbiddenException(
+        'You are not allowed to update this accommodation',
+      );
+    }
+    await this.accommodationService.deleteAccommodation(id);
+    return { message: 'Accommodation Deleted Successfully' };
   }
 }

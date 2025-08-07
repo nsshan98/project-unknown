@@ -8,27 +8,30 @@ import { UpdateAccommodationDto } from './dto/updateAccommodation.dto';
 
 @Injectable()
 export class AccommodationService {
-    constructor(@InjectRepository(Accommodation) private accommodationRepository: Repository<Accommodation>,) {}
+  constructor(
+    @InjectRepository(Accommodation)
+    private accommodationRepository: Repository<Accommodation>,
+  ) {}
 
-    async findOneWithId(id: string){
-        return await this.accommodationRepository.findOne({
-            where: {id},
-            relations: ['user']
-        })
-    }
-    async createAccommodation(dto: CreateAccommodationDto, user: User) {
-        const accommodation = await this.accommodationRepository.create({
-            ...dto,
-            user,});
-        return await this.accommodationRepository.save(accommodation);
-    }
+  async findOneWithId(id: string) {
+    return await this.accommodationRepository.findOne({
+      where: { id },
+      relations: ['user'],
+    });
+  }
+  async createAccommodation(dto: CreateAccommodationDto, user: User) {
+    const accommodation = await this.accommodationRepository.create({
+      ...dto,
+      user,
+    });
+    return await this.accommodationRepository.save(accommodation);
+  }
 
-    async updateAccommodation(id:string, dto:UpdateAccommodationDto){
-        const updatedAccomodation = await this.accommodationRepository.update({id}, dto)
-        
-        return {
-            message: 'Accommodation Updated Successfully',
-            data: dto
-        }
-    }
+  async updateAccommodation(id: string, dto: UpdateAccommodationDto) {
+    await this.accommodationRepository.update({ id }, dto);
+
+    return this.accommodationRepository.findOne({
+      where: { id },
+    });
+  }
 }

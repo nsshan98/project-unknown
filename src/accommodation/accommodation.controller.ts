@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  ForbiddenException,
   Param,
   ParseUUIDPipe,
   Patch,
@@ -34,18 +35,18 @@ export class AccommodationController {
   @UseInterceptors(FileInterceptor('image'))
   async createAccommodation(
     @Body() dto: CreateAccommodationDto,
-    @UploadedFile(new ImageUploadValidationPipe({required: true})) image: Express.Multer.File,
+    @UploadedFile(new ImageUploadValidationPipe({ required: true }))
+    image: Express.Multer.File,
     @AuthenticatedUser() user: User,
   ) {
     {
       if (!image) throw new BadRequestException('Image is required');
 
-      const uploadImage = await this.cloudinaryService.uploadImage(image);
+      const uploadResult = await this.cloudinaryService.uploadImage(image);
       dto.image = {
-        image_url: uploadImage.secure_url,
-        image_public_id: uploadImage.public_id,
-      }
-      console.log(uploadImage);
+        image_url: uploadResult?.secure_url as string,
+        image_public_id: uploadResult?.public_id as string,
+      };
 
       return this.accommodationService.createAccommodation(dto, user);
     }
@@ -57,27 +58,41 @@ export class AccommodationController {
   async updateAccommodation(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() dto: UpdateAccommodationDto,
-    @UploadedFile(new ImageUploadValidationPipe({required:false})) updatedImage: Express.Multer.File | undefined,
+    @UploadedFile(new ImageUploadValidationPipe({ required: false }))
+    updatedImage: Express.Multer.File | undefined,
     @AuthenticatedUser() user: User,
   ) {
     const getAccommodation = await this.accommodationService.findOneWithId(id);
-    console.log(getAccommodation);
 
-    if(getAccommodation?.image.image_public_id){
-      console.log(getAccommodation.image.image_public_id);
-      
-      return this.cloudinaryService.deleteImage(getAccommodation.image.image_public_id)
+    if (getAccommodation?.image.image_public_id) {
+      await this.cloudinaryService.deleteImage(
+        getAccommodation.image.image_public_id,
+      );
     }
 
-    const uploadImage = await this.cloudinaryService.uploadImage(updatedImage as Express.Multer.File);
+    if (updatedImage) {
+      const uploadResult = await this.cloudinaryService.uploadImage(
+        updatedImage as Express.Multer.File,
+      );
       dto.image = {
-        image_url: uploadImage.secure_url,
-        image_public_id: uploadImage.public_id,
-      }
-    
-    
-    if(getAccommodation?.user.id !== user.id) throw new UnauthorizedException('You are not allowed to update this accommodation');
-    
-    return await this.accommodationService.updateAccommodation(id, dto);
+        image_url: uploadResult?.secure_url as string,
+        image_public_id: uploadResult?.public_id as string,
+      };
+    }
+
+    if (getAccommodation?.user.id !== user.id)
+      throw new ForbiddenException(
+        'You are not allowed to update this accommodation',
+      );
+
+    const updatedData = await this.accommodationService.updateAccommodation(
+      id,
+      dto,
+    );
+
+    return {
+      message: 'Accommodation Updated Successfully',
+      data: updatedData,
+    };
   }
 }

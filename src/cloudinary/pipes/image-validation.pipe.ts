@@ -12,7 +12,6 @@ export class ImageUploadValidationPipe implements PipeTransform {
   constructor(private options: ImageUploadValidation = { required: true }) {}
   transform(file: Express.Multer.File | undefined) {
     const { required } = this.options;
-    console.log(file, 'file');
 
     if (!file) {
       if (required) {

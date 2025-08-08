@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   ForbiddenException,
+  Get,
   Param,
   ParseUUIDPipe,
   Patch,
@@ -106,7 +107,21 @@ export class AccommodationController {
         'You are not allowed to update this accommodation',
       );
     }
+    if(getAccommodation?.image){
+      await this.cloudinaryService.deleteImage(getAccommodation.image.image_public_id);
+    }
     await this.accommodationService.deleteAccommodation(id);
     return { message: 'Accommodation Deleted Successfully' };
+  }
+
+  @Roles(Role.USER)
+  @Get('all-accommodations')
+  async getAllAccommodations(){
+   const allAccommodations = await this.accommodationService.getAllAccommodations()
+   return {
+    message: 'All Accommodations Fetched Successfully',
+    data: allAccommodations
+   }
+
   }
 }

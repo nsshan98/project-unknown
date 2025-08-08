@@ -37,4 +37,8 @@ export class AccommodationService {
   async deleteAccommodation(id: string){
     return await this.accommodationRepository.delete({id})
   }
+
+  async getAllAccommodations() {
+    return await this.accommodationRepository.find()
+  }
 }

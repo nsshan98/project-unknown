@@ -14,16 +14,16 @@ export class Amenity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ default: false })
   has_wifi: boolean;
 
-  @Column()
+  @Column({ default: false })
   has_balcony: boolean;
 
-  @Column()
+  @Column({ default: false })
   has_parking_space: boolean;
 
-  @Column()
+  @Column({ default: false })
   has_elevator: boolean;
 
   @CreateDateColumn()

@@ -20,10 +20,14 @@ export class AccommodationService {
     });
   }
   async createAccommodation(dto: CreateAccommodationDto, user: User) {
+    console.log(dto);
+    
     const accommodation = await this.accommodationRepository.create({
       ...dto,
+      amenity: dto.amenity,
       user,
     });
+    
     return await this.accommodationRepository.save(accommodation);
   }
 

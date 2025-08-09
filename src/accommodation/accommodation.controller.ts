@@ -13,6 +13,7 @@ import {
   UnauthorizedException,
   UploadedFile,
   UseInterceptors,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AccommodationService } from './accommodation.service';
 import { CreateAccommodationDto } from './dto/createAccommodation.dto';
@@ -37,7 +38,7 @@ export class AccommodationController {
   @Post('create')
   @UseInterceptors(FileInterceptor('image'))
   async createAccommodation(
-    @Body(new ParseJsonFieldsPipe(['amenity'])) dto: CreateAccommodationDto,
+    @Body(new ParseJsonFieldsPipe(['amenity']), new ValidationPipe({ whitelist: true, transform: true })) dto: CreateAccommodationDto,
     @UploadedFile(new ImageUploadValidationPipe({ required: true }))
     image: Express.Multer.File,
     @AuthenticatedUser() user: User,

@@ -69,7 +69,7 @@ export class CreateAccommodationDto {
     @IsNotEmpty()
     location: string;
 
-    @ValidateNested()
+    @ValidateNested({each: true})
     @Type(() => AmenityDto)
     amenity?: AmenityDto
 }

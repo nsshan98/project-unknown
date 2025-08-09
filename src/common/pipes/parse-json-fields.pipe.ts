@@ -7,7 +7,7 @@ import {
 
 @Injectable()
 export class ParseJsonFieldsPipe implements PipeTransform {
-  constructor(private readonly fields: string[]) {}
+  constructor(private fields: string[]) {}
 
 transform(value: any, metadata: ArgumentMetadata) {
   console.log('Pipe received value:', value);

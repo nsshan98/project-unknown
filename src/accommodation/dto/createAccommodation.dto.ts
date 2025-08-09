@@ -1,4 +1,4 @@
-import { IsBoolean, IsDate, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, ValidateNested } from "class-validator";
+import { IsBoolean, IsDate, IsEnum, IsNotEmpty, IsNumber, IsObject, IsOptional, IsPositive, IsString, ValidateNested } from "class-validator";
 import { RoomTypes } from "../enum/roomTypes.enum";
 import { Type } from "class-transformer";
 import { AmenityDto } from "../amenity/dto/createAmenity.dto";
@@ -69,7 +69,8 @@ export class CreateAccommodationDto {
     @IsNotEmpty()
     location: string;
 
-    @ValidateNested({each: true})
+    @IsObject()
+    @ValidateNested()
     @Type(() => AmenityDto)
     amenity?: AmenityDto
 }

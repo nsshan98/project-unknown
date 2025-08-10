@@ -69,8 +69,8 @@ export class CreateAccommodationDto {
     @IsNotEmpty()
     location: string;
 
-    @IsObject()
     @ValidateNested()
     @Type(() => AmenityDto)
-    amenity?: AmenityDto
+    @IsNotEmpty()
+    amenity: AmenityDto
 }

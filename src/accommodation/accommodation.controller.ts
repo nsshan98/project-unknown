@@ -25,7 +25,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { ImageUploadValidationPipe } from 'src/cloudinary/pipes/image-validation.pipe';
 import { UpdateAccommodationDto } from './dto/updateAccommodation.dto';
-import { ParseJsonFieldsPipe } from 'src/common/pipes/parse-json-fields.pipe';
+// import { ParseJsonFieldsPipe } from 'src/common/pipes/parse-json-fields.pipe';
 
 @Controller('accommodation')
 export class AccommodationController {
@@ -38,12 +38,12 @@ export class AccommodationController {
   @Post('create')
   @UseInterceptors(FileInterceptor('image'))
   async createAccommodation(
-    @Body(new ParseJsonFieldsPipe(['amenity']), new ValidationPipe({ whitelist: true, transform: true })) dto: CreateAccommodationDto,
+    @Body() dto: CreateAccommodationDto,
     @UploadedFile(new ImageUploadValidationPipe({ required: true }))
     image: Express.Multer.File,
     @AuthenticatedUser() user: User,
   ) {
-    console.log(dto.amenity, 'dto');
+    console.log(typeof dto.amenity, 'dto');
     
     {
       if (!image) throw new BadRequestException('Image is required');

@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToMany,
   ManyToOne,
   OneToMany,
@@ -63,7 +64,9 @@ export class Accommodation {
 
   @OneToOne(() => Amenity, (amenity) => amenity.accommodation, {
     cascade: true,
+    onDelete: 'CASCADE',
   })
+  @JoinColumn()
   amenity: Amenity;
 
   @ManyToOne(() => User, (user) => user.accommodations)

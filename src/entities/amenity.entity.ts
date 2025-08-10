@@ -11,8 +11,8 @@ import { Accommodation } from './accommodation.entity';
 
 @Entity('amenities')
 export class Amenity {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ default: false })
   has_wifi: boolean;
@@ -33,6 +33,5 @@ export class Amenity {
   updated_at: Date;
 
   @OneToOne(() => Accommodation, (accommodation) => accommodation.amenity)
-  @JoinColumn()
   accommodation: Accommodation;
 }

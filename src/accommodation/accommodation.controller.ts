@@ -69,6 +69,8 @@ export class AccommodationController {
     @AuthenticatedUser() user: User,
   ) {
     const getAccommodation = await this.accommodationService.findOneWithId(id);
+    console.log(getAccommodation);
+    
 
     if (getAccommodation?.image.image_public_id) {
       await this.cloudinaryService.deleteImage(

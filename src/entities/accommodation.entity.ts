@@ -64,9 +64,8 @@ export class Accommodation {
 
   @OneToOne(() => Amenity, (amenity) => amenity.accommodation, {
     cascade: true,
-    onDelete: 'CASCADE',
+    eager: true
   })
-  @JoinColumn()
   amenity: Amenity;
 
   @ManyToOne(() => User, (user) => user.accommodations)

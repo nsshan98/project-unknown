@@ -1,19 +1,19 @@
 import { IsBoolean, IsOptional } from 'class-validator';
 
-export class AmenityDto {
+export class CreateAmenityDto {
   @IsBoolean()
-  @IsOptional()
-  has_wifi?: boolean;
+  // @IsOptional()
+  has_wifi: boolean;
 
   @IsBoolean()
-  @IsOptional()
-  has_balcony?: boolean;
+  // @IsOptional()
+  has_balcony: boolean;
 
   @IsBoolean()
-  @IsOptional()
-  has_parking_space?: boolean;
+  // @IsOptional()
+  has_parking_space: boolean;
 
   @IsBoolean()
-  @IsOptional()
-  has_elevator?: boolean;
+  // @IsOptional()
+  has_elevator: boolean;
 }

@@ -32,6 +32,9 @@ export class Amenity {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @OneToOne(() => Accommodation, (accommodation) => accommodation.amenity)
+  @OneToOne(() => Accommodation, (accommodation) => accommodation.amenity, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn()
   accommodation: Accommodation;
 }

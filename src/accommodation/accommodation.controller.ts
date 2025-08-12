@@ -58,38 +58,51 @@ export class AccommodationController {
     }
   }
 
+  @Roles(Role.USER)
   @Patch('update/:id')
-@UseInterceptors(FileInterceptor('image'))
-async updateAccommodation(
-  @Param('id', new ParseUUIDPipe()) id: string,
-  @Body() dto: UpdateAccommodationDto,
-  @UploadedFile(new ImageUploadValidationPipe({ required: false })) updatedImage: Express.Multer.File | undefined,
-  @AuthenticatedUser() user: User,
-) {
-  const accommodation = await this.accommodationService.findOneWithId(id);
+  @UseInterceptors(FileInterceptor('image'))
+  async updateAccommodation(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() dto: UpdateAccommodationDto,
+    @UploadedFile(new ImageUploadValidationPipe({ required: false }))
+    updatedImage: Express.Multer.File | undefined,
+    @AuthenticatedUser() user: User,
+  ) {
+    const getAccommodation = await this.accommodationService.findOneWithId(id);
+    console.log(getAccommodation);
+    
 
-  if (accommodation?.user.id !== user.id)
-    throw new ForbiddenException('You are not allowed to update this accommodation');
+    if (getAccommodation?.image.image_public_id) {
+      await this.cloudinaryService.deleteImage(
+        getAccommodation.image.image_public_id,
+      );
+    }
 
-  if (accommodation.image?.image_public_id && updatedImage) {
-    await this.cloudinaryService.deleteImage(accommodation.image.image_public_id);
-  }
+    if (updatedImage) {
+      const uploadResult = await this.cloudinaryService.uploadImage(
+        updatedImage as Express.Multer.File,
+      );
+      dto.image = {
+        image_url: uploadResult?.secure_url as string,
+        image_public_id: uploadResult?.public_id as string,
+      };
+    }
 
-  if (updatedImage) {
-    const uploadResult = await this.cloudinaryService.uploadImage(updatedImage);
-    dto.image = {
-      image_url: uploadResult?.secure_url as string,
-      image_public_id: uploadResult?.public_id as string,
+    if (getAccommodation?.user.id !== user.id)
+      throw new ForbiddenException(
+        'You are not allowed to update this accommodation',
+      );
+
+    const updatedData = await this.accommodationService.updateAccommodation(
+      id,
+      dto,
+    );
+
+    return {
+      message: 'Accommodation Updated Successfully',
+      data: updatedData,
     };
   }
-
-  const updatedAccommodation = await this.accommodationService.updateAccommodation(id, dto);
-
-  return {
-    message: 'Accommodation updated successfully',
-    data: updatedAccommodation,
-  };
-}
 
   @Roles(Role.USER)
   @Delete('delete/:id')

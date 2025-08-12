@@ -5,11 +5,10 @@ import { Accommodation } from 'src/entities/accommodation.entity';
 import { AccommodationController } from './accommodation.controller';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
-import { Amenity } from 'src/entities/amenity.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Accommodation, Amenity]), CloudinaryModule],
+  imports: [TypeOrmModule.forFeature([Accommodation]), CloudinaryModule],
   controllers: [AccommodationController],
-  providers: [AccommodationService, CloudinaryService,]
+  providers: [AccommodationService, CloudinaryService]
 })
 export class AccommodationModule {}

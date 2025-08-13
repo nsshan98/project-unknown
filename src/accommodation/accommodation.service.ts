@@ -46,7 +46,7 @@ export class AccommodationService {
   if (!accommodation) throw new NotFoundException('Accommodation not found');
 
   // separate nested amenity so we don't accidentally overwrite relation with plain object
-  const { amenity: amenityDto, ...rest } = dto as any;
+  const { amenity: amenityDto, ...rest } = dto as UpdateAccommodationDto;
 
   // Merge primitive fields / image etc.
   Object.assign(accommodation, rest);
@@ -60,13 +60,13 @@ export class AccommodationService {
   }
 
   // save will persist both accommodation and amenity (cascade:true)
-  // const saved = await this.accommodationRepository.save(accommodation);
+  const savedAccommodation = await this.accommodationRepository.save(accommodation);
   
   // return this.accommodationRepository.findOne({ where: { id }, relations: ['amenity', 'user'] });
 
 
 const response = {
-  ...accommodation,
+  ...savedAccommodation,
   user: {
     id: accommodation.user.id,
     email: accommodation.user.email,

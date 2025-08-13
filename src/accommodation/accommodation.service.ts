@@ -5,16 +5,12 @@ import { Repository } from 'typeorm';
 import { CreateAccommodationDto } from './dto/createAccommodation.dto';
 import { User } from 'src/entities/user.entity';
 import { UpdateAccommodationDto } from './dto/updateAccommodation.dto';
-import { Amenity } from 'src/entities/amenity.entity';
 
 @Injectable()
 export class AccommodationService {
   constructor(
     @InjectRepository(Accommodation)
     private accommodationRepository: Repository<Accommodation>,
-
-    @InjectRepository(Amenity)
-    private amenityRepository: Repository<Amenity>,
   ) {}
 
   async findOneWithId(id: string) {
@@ -34,7 +30,14 @@ export class AccommodationService {
     return await this.accommodationRepository.save(accommodation);
   }
 
-async updateAccommodation(id: string, dto: UpdateAccommodationDto) {
+  // async updateAccommodation(id: string, dto: UpdateAccommodationDto) {
+  //   await this.accommodationRepository.update({ id }, dto);
+  //   return this.accommodationRepository.findOne({
+  //     where: { id },
+  //   });
+  // }
+
+  async updateAccommodation(id: string, dto: UpdateAccommodationDto) {
   const accommodation = await this.accommodationRepository.findOne({
     where: { id },
     relations: ['amenity', 'user'],
@@ -57,8 +60,21 @@ async updateAccommodation(id: string, dto: UpdateAccommodationDto) {
   }
 
   // save will persist both accommodation and amenity (cascade:true)
-  const saved = await this.accommodationRepository.save(accommodation);
-  return this.accommodationRepository.findOne({ where: { id }, relations: ['amenity', 'user'] });
+  // const saved = await this.accommodationRepository.save(accommodation);
+  
+  // return this.accommodationRepository.findOne({ where: { id }, relations: ['amenity', 'user'] });
+
+
+const response = {
+  ...accommodation,
+  user: {
+    id: accommodation.user.id,
+    email: accommodation.user.email,
+    // no password, no other fields
+  }
+};
+
+return response;
 }
 
   async deleteAccommodation(id: string){

@@ -30,52 +30,77 @@ export class AccommodationService {
     return await this.accommodationRepository.save(accommodation);
   }
 
-  // async updateAccommodation(id: string, dto: UpdateAccommodationDto) {
-  //   await this.accommodationRepository.update({ id }, dto);
-  //   return this.accommodationRepository.findOne({
-  //     where: { id },
-  //   });
-  // }
-
   async updateAccommodation(id: string, dto: UpdateAccommodationDto) {
-  const accommodation = await this.accommodationRepository.findOne({
+   const accommodation = await this.accommodationRepository.findOne({
     where: { id },
     relations: ['amenity', 'user'],
-  });
+   });
 
-  if (!accommodation) throw new NotFoundException('Accommodation not found');
+   if(!accommodation) throw new NotFoundException('Accommodation not found')
 
-  // separate nested amenity so we don't accidentally overwrite relation with plain object
-  const { amenity: amenityDto, ...rest } = dto as UpdateAccommodationDto;
+    const { amenity: amenityDto, ...rest} = dto as UpdateAccommodationDto
+    
+    
+    Object.assign(accommodation, rest)
 
-  // Merge primitive fields / image etc.
-  Object.assign(accommodation, rest);
-
-  // If amenity DTO present -> update or create
-  if (amenityDto) {
-    if (accommodation.amenity) {
-      // update existing amenity object in-place (cascade: true will persist)
-      Object.assign(accommodation.amenity, amenityDto);
+    if(amenityDto){
+      if(accommodation.amenity){
+        Object.assign(accommodation.amenity, amenityDto)
+      }
     }
+    const savedAccommodation = await this.accommodationRepository.save(accommodation)
+
+
+    const response = {
+      ...savedAccommodation,
+      user: {
+        id: accommodation.user.id,
+        email: accommodation.user.email,
+      }
+    }
+
+    return response
   }
 
-  // save will persist both accommodation and amenity (cascade:true)
-  const savedAccommodation = await this.accommodationRepository.save(accommodation);
+//   async updateAccommodation(id: string, dto: UpdateAccommodationDto) {
+//   const accommodation = await this.accommodationRepository.findOne({
+//     where: { id },
+//     relations: ['amenity', 'user'],
+//   });
+
+//   if (!accommodation) throw new NotFoundException('Accommodation not found');
+
+//   // separate nested amenity so we don't accidentally overwrite relation with plain object
+//   const { amenity: amenityDto, ...rest } = dto as UpdateAccommodationDto;
+
+//   // Merge primitive fields / image etc.
+//   Object.assign(accommodation, rest);
+
+//   // If amenity DTO present -> update or create
+//   if (amenityDto) {
+//     if (accommodation.amenity) {
+//       // update existing amenity object in-place (cascade: true will persist)
+//       Object.assign(accommodation.amenity, amenityDto);
+//     }
+//   }
+
+//   // save will persist both accommodation and amenity (cascade:true)
+//   const savedAccommodation = await this.accommodationRepository.save(accommodation);
   
-  // return this.accommodationRepository.findOne({ where: { id }, relations: ['amenity', 'user'] });
+//   // return this.accommodationRepository.findOne({ where: { id }, relations: ['amenity', 'user'] });
 
 
-const response = {
-  ...savedAccommodation,
-  user: {
-    id: accommodation.user.id,
-    email: accommodation.user.email,
-    // no password, no other fields
-  }
-};
+// const response = {
+//   ...savedAccommodation,
+//   user: {
+//     id: accommodation.user.id,
+//     email: accommodation.user.email,
+//     // no password, no other fields
+//   }
+// };
 
-return response;
-}
+// return response;
+// }
 
   async deleteAccommodation(id: string){
     return await this.accommodationRepository.delete({id})

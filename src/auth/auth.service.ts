@@ -44,39 +44,76 @@ export class AuthService {
     };
   }
 
-  async generateTokens(userId: number) {
-    const payload: AuthJwtPayload = { sub: userId };
+  // async generateTokens(userId: number) {
+  //   const payload: AuthJwtPayload = { sub: userId };
+  //   const [accessToken, refreshToken] = await Promise.all([
+  //     this.jwtService.signAsync(payload),
+  //     this.jwtService.signAsync(payload, this.refreshTokenConfig),
+  //   ]);
+
+  //   return {
+  //     accessToken,
+  //     refreshToken,
+  //   };
+  // }
+
+    async generateTokens(userId: number) {
+    const payload = { sub: userId };
+
     const [accessToken, refreshToken] = await Promise.all([
+      // Access token uses default JwtModule config
       this.jwtService.signAsync(payload),
-      this.jwtService.signAsync(payload, this.refreshTokenConfig),
+
+      // Refresh token uses refresh config explicitly
+      this.jwtService.signAsync(payload, {
+        secret: this.refreshTokenConfig.secret,
+        expiresIn: this.refreshTokenConfig.expiresIn,
+      }),
     ]);
 
-    return {
-      accessToken,
-      refreshToken,
-    };
+    return { accessToken, refreshToken };
   }
 
-  async refreshToken(userId: number) {
-     const { accessToken, refreshToken } = await this.generateTokens(userId);
+  // async refreshToken(userId: number) {
+  //    const { accessToken, refreshToken } = await this.generateTokens(userId);
+  //   const hashedRefreshToken = await argon2.hash(refreshToken);
+  //   await this.userService.updateHashedRefreshToken(userId, hashedRefreshToken);
+
+  //   return {
+  //     userId,
+  //     accessToken,
+  //     refreshToken,
+  //   };
+  // }
+
+   async refreshToken(userId: number) {
+    const { accessToken, refreshToken } = await this.generateTokens(userId);
+
+    // Hash & store refresh token in DB
     const hashedRefreshToken = await argon2.hash(refreshToken);
     await this.userService.updateHashedRefreshToken(userId, hashedRefreshToken);
 
-    return {
-      userId,
-      accessToken,
-      refreshToken,
-    };
+    return { userId, accessToken, refreshToken };
   }
 
-  async validateRefreshToken(userId: number, refreshToken: string){
+  // async validateRefreshToken(userId: number, refreshToken: string){
+  //   const user = await this.userService.getSingleUser(userId);
+  //   if( !user || !user.hashed_refresh_token) throw new UnauthorizedException('Invalid refresh token');
+
+  //   const isRefreshTokenMatch = await argon2.verify(user.hashed_refresh_token, refreshToken);
+  //   if(!isRefreshTokenMatch) throw new UnauthorizedException('Invalid refresh token');
+
+  //   return {userId: user.id}
+  // }
+
+  async validateRefreshToken(userId: number, refreshToken: string) {
     const user = await this.userService.getSingleUser(userId);
-    if( !user || !user.hashed_refresh_token) throw new UnauthorizedException('Invalid refresh token');
+    if (!user || !user.hashed_refresh_token) throw new UnauthorizedException('Invalid refresh token');
 
-    const isRefreshTokenMatch = await argon2.verify(user.hashed_refresh_token, refreshToken);
-    if(!isRefreshTokenMatch) throw new UnauthorizedException('Invalid refresh token');
+    const isMatch = await argon2.verify(user.hashed_refresh_token, refreshToken);
+    if (!isMatch) throw new UnauthorizedException('Invalid refresh token');
 
-    return {userId: user.id}
+    return { userId: user.id };
   }
 
   async logout(userId: number) {    

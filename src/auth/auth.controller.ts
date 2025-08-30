@@ -18,10 +18,11 @@ export class AuthController {
 
   }
 
+  @Public()
   @UseGuards(RefreshJwtAuthGuard)
   @Post("refresh-token")
   refreshToken(@Request() req){
-    const userId = req.user.id;
+    const userId = req.user.userId;
     return this.authService.refreshToken(userId);
   }
 

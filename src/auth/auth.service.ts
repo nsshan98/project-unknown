@@ -91,6 +91,8 @@ export class AuthService {
 
     // Hash & store refresh token in DB
     const hashedRefreshToken = await argon2.hash(refreshToken);
+    console.log('New hashed refresh token', hashedRefreshToken);
+
     await this.userService.updateHashedRefreshToken(userId, hashedRefreshToken);
 
     return { userId, accessToken, refreshToken };
@@ -110,6 +112,7 @@ export class AuthService {
     const user = await this.userService.getSingleUser(userId);
     if (!user || !user.hashed_refresh_token) throw new UnauthorizedException('Invalid refresh token');
 
+    console.log('Stored hash', user.hashed_refresh_token);
     const isMatch = await argon2.verify(user.hashed_refresh_token, refreshToken);
     if (!isMatch) throw new UnauthorizedException('Invalid refresh token');
 
